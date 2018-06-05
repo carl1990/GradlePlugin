@@ -1,0 +1,38 @@
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
+
+repositories {
+    mavenCentral()
+    maven { url "http://localhost:8081/nexus/content/repositories/za_mobile_share_platform/" }
+}
+
+dependencies {
+    //gradle sdk
+    compile gradleApi()
+    //groovy sdk
+    compile localGroovy()
+}
+
+def MAVEN_LOCAL_PATH = 'http://localhost:8081/nexus/content/repositories/za_mobile_share_platform/'
+def VERSION_NAME = '1.0.1-SNAPSHOT'
+def GROUP_ID = 'com.carl.mobile'
+def ARTIFACT_ID = 'plugin'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //提交到远程服务器：
+             repository(url: MAVEN_LOCAL_PATH) {
+                authentication(userName: "admin", password: "admin123")
+             }
+            pom.project {
+                groupId GROUP_ID
+                artifactId ARTIFACT_ID
+                version VERSION_NAME
+                packaging 'aar'
+            }
+        }
+    }
+}
